@@ -70,7 +70,7 @@ const Home = () => {
                   <span>Generating insights...</span>
                 </div>
               ) : (
-                <p style={{ lineHeight: '1.6', color: 'rgba(255, 255, 255, 0.9)' }}>{insights}</p>
+                <p style={{ lineHeight: '1.6', color: 'var(--text-secondary)' }}>{insights}</p>
               )}
             </div>
           )}
@@ -84,18 +84,46 @@ const Home = () => {
       )}
       
       {!searchQuery && !loading && (
-        <div className="card scale-in" style={{ textAlign: 'center', marginTop: '2rem' }}>
-          <h3 className="gradient-text" style={{ marginBottom: '1rem' }}>
-            Welcome to the Movie Dashboard
-          </h3>
-          <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
-            Use natural language to search for movies. Our AI-powered search understands 
-            queries like "movies like The Matrix" or "popular sci-fi films from the 90s".
-          </p>
-          <div style={{ marginTop: '2rem' }}>
-            <p style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.6)' }}>
-              Powered by MongoDB Atlas Vector Search and Google Gemini AI
+        <div className="welcome-section">
+          <div className="card scale-in" style={{ textAlign: 'center', marginTop: '2rem' }}>
+            <h3 className="gradient-text" style={{ marginBottom: '1rem' }}>
+              🎬 Discover Movies with AI
+            </h3>
+            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+              Use natural language to search for movies. Our AI-powered search understands 
+              queries like "movies like The Matrix" or "popular sci-fi films from the 90s".
             </p>
+            
+            <div className="try-examples">
+              <h4 style={{ color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '1rem' }}>
+                Try these examples:
+              </h4>
+              <div className="example-queries">
+                {[
+                  'movies like The Matrix',
+                  'popular sci-fi films',
+                  'romantic comedies from the 90s',
+                  'action movies with high ratings',
+                  'thriller films from Christopher Nolan',
+                  'animated movies for kids'
+                ].map((example, index) => (
+                  <button
+                    key={index}
+                    className="example-query-btn"
+                    onClick={() => handleSearch(example, true)}
+                    style={{ '--stagger-delay': index }}
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div style={{ marginTop: '2rem' }}>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                Powered by MongoDB Atlas Vector Search and Google Gemini AI
+              </p>
+            </div>
           </div>
         </div>
       )}

@@ -36,7 +36,7 @@
 }
 
 .dashboard-subtitle {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   font-size: 1.2rem;
   font-weight: 500;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -88,7 +88,7 @@
 .chart-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text-primary);
   margin-bottom: 2rem;
   text-align: center;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -160,7 +160,7 @@
 }
 
 .stat-label {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -184,19 +184,19 @@
   border-radius: 20px;
   padding: 3rem;
   text-align: center;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
   animation: bounceIn 0.8s ease;
   box-shadow: 0 20px 40px rgba(220, 53, 69, 0.1);
 }
 
 .error-dashboard h3 {
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text-primary);
   margin-bottom: 1rem;
   font-size: 1.5rem;
 }
 
 .error-dashboard p {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   margin-bottom: 2rem;
   line-height: 1.6;
 }

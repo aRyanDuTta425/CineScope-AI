@@ -128,10 +128,10 @@ const DashboardPage = () => {
       </div>
 
       <div className="card" style={{ marginTop: '2rem', textAlign: 'center' }}>
-        <h3 style={{ color: '#667eea', marginBottom: '1rem' }}>
+        <h3 style={{ color: 'var(--accent-primary)', marginBottom: '1rem' }}>
           Data Insights
         </h3>
-        <p style={{ color: '#666', lineHeight: '1.6' }}>
+        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
           This dashboard analyzes the MongoDB sample_mflix.embedded_movies collection, 
           providing insights into movie distribution across genres, ratings, and release years. 
           The data is processed in real-time from MongoDB Atlas.

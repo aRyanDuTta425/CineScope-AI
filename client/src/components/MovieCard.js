@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShimmerLoader } from './LoadingSpinner';
 import '../styles/MovieCard.css';
 
 const MovieCard = ({ movie, index = 0 }) => {
@@ -108,28 +109,23 @@ const MovieCard = ({ movie, index = 0 }) => {
 // Component to display the movies grid
 export const MoviesGrid = ({ movies, loading, error }) => {
   if (loading) {
-    return (
-      <div className="loading">
-        <div className="spinner"></div>
-        <p>Searching for movies...</p>
-      </div>
-    );
+    return <ShimmerLoader />;
   }
 
   if (error) {
     return (
-      <div className="card" style={{ background: 'rgba(220, 53, 69, 0.1)', borderColor: 'rgba(220, 53, 69, 0.3)' }}>
-        <h3 style={{ color: 'rgba(255, 255, 255, 0.9)' }}>Search Error</h3>
-        <p style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{error}</p>
+      <div className="card error-message">
+        <h3>Search Error</h3>
+        <p>{error}</p>
       </div>
     );
   }
 
   if (!movies || movies.length === 0) {
     return (
-      <div className="card scale-in" style={{ textAlign: 'center' }}>
-        <h3 style={{ color: 'rgba(255, 255, 255, 0.9)' }}>No movies found</h3>
-        <p style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Try searching with different keywords or check your spelling.</p>
+      <div className="card no-movies scale-in">
+        <h3>No movies found</h3>
+        <p>Try searching with different keywords or check your spelling.</p>
       </div>
     );
   }
