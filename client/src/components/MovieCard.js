@@ -2,7 +2,7 @@ import React from 'react';
 import { ShimmerLoader } from './LoadingSpinner';
 import '../styles/MovieCard.css';
 
-const MovieCard = ({ movie, index = 0 }) => {
+const MovieCard = ({ movie, index = 0, onDiscoverSimilar }) => {
   const {
     title,
     year,
@@ -101,13 +101,26 @@ const MovieCard = ({ movie, index = 0 }) => {
             </div>
           )}
         </div>
+
+        {onDiscoverSimilar && (
+          <div className="movie-actions">
+            <button 
+              className="discover-similar-btn"
+              onClick={() => onDiscoverSimilar(movie)}
+              title={`Find movies similar to ${title}`}
+            >
+              <span className="btn-icon">🎯</span>
+              <span className="btn-text">Discover Similar</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 // Component to display the movies grid
-export const MoviesGrid = ({ movies, loading, error }) => {
+export const MoviesGrid = ({ movies, loading, error, onDiscoverSimilar }) => {
   if (loading) {
     return <ShimmerLoader />;
   }
@@ -143,6 +156,7 @@ export const MoviesGrid = ({ movies, loading, error }) => {
             key={movie._id || index} 
             movie={movie} 
             index={index}
+            onDiscoverSimilar={onDiscoverSimilar}
           />
         ))}
       </div>

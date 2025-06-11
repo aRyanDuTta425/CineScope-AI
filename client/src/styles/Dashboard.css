@@ -63,6 +63,10 @@
   animation-delay: calc(var(--card-index, 0) * 200ms);
 }
 
+.chart-card-wide {
+  grid-column: span 2;
+}
+
 .chart-card::before {
   content: '';
   position: absolute;

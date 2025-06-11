@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import SearchBar from '../components/SearchBar';
 import { MoviesGrid } from '../components/MovieCard';
+import MovieTimeline from '../components/MovieTimeline';
+import MovieFilters from '../components/MovieFilters';
 import { movieAPI } from '../services/api';
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [insights, setInsights] = useState('');
   const [insightsLoading, setInsightsLoading] = useState(false);
+  const [viewMode, setViewMode] = useState('grid'); // grid, timeline
+  const [filters, setFilters] = useState(null);
+  const [availableGenres, setAvailableGenres] = useState([]);
 
   const handleSearch = async (query, useVector) => {
     setLoading(true);
@@ -22,6 +28,11 @@ const Home = () => {
       
       if (response.success) {
         setMovies(response.movies);
+        setFilteredMovies(response.movies);
+        
+        // Extract available genres
+        const genres = [...new Set(response.movies.flatMap(movie => movie.genres || []))];
+        setAvailableGenres(genres.sort());
         
         // Generate insights if movies found
         if (response.movies.length > 0) {
@@ -36,6 +47,98 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDiscoverSimilar = async (movie) => {
+    if (!movie.title) return;
+    
+    setLoading(true);
+    setError(null);
+    setSearchQuery(`Similar to "${movie.title}"`);
+    setInsights('');
+
+    try {
+      // First try using the new similar API endpoint
+      let response;
+      try {
+        response = await movieAPI.findSimilar(movie);
+      } catch (err) {
+        // Fallback to text search if vector search fails
+        console.log('Vector search failed, using text fallback');
+        response = await movieAPI.search(`movies like ${movie.title}`, true);
+      }
+      
+      if (response.success) {
+        setMovies(response.movies);
+        setFilteredMovies(response.movies);
+        
+        // Extract available genres
+        const genres = [...new Set(response.movies.flatMap(m => m.genres || []))];
+        setAvailableGenres(genres.sort());
+        
+        // Generate insights if movies found
+        if (response.movies.length > 0) {
+          generateInsights(response.movies);
+        }
+      } else {
+        setError('Failed to find similar movies. Please try again.');
+      }
+    } catch (err) {
+      console.error('Similar movies error:', err);
+      setError(err.response?.data?.message || 'Failed to find similar movies. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFiltersChange = (newFilters) => {
+    setFilters(newFilters);
+    
+    if (!movies.length) return;
+    
+    let filtered = [...movies];
+    
+    // Filter by year range
+    if (newFilters.yearRange) {
+      filtered = filtered.filter(movie => {
+        const year = parseInt(movie.year);
+        return year >= newFilters.yearRange[0] && year <= newFilters.yearRange[1];
+      });
+    }
+    
+    // Filter by rating range
+    if (newFilters.ratingRange && newFilters.ratingRange[0] > 0 || newFilters.ratingRange[1] < 10) {
+      filtered = filtered.filter(movie => {
+        const rating = movie.imdb?.rating || 0;
+        return rating >= newFilters.ratingRange[0] && rating <= newFilters.ratingRange[1];
+      });
+    }
+    
+    // Filter by selected genres
+    if (newFilters.selectedGenres?.length > 0) {
+      filtered = filtered.filter(movie => {
+        const movieGenres = movie.genres || [];
+        return newFilters.selectedGenres.some(genre => movieGenres.includes(genre));
+      });
+    }
+    
+    // Sort by selected criteria
+    if (newFilters.sortBy) {
+      filtered.sort((a, b) => {
+        switch (newFilters.sortBy) {
+          case 'year':
+            return (b.year || 0) - (a.year || 0);
+          case 'rating':
+            return (b.imdb?.rating || 0) - (a.imdb?.rating || 0);
+          case 'title':
+            return (a.title || '').localeCompare(b.title || '');
+          default:
+            return 0; // relevance - keep original order
+        }
+      });
+    }
+    
+    setFilteredMovies(filtered);
   };
 
   const generateInsights = async (moviesList) => {
@@ -74,12 +177,49 @@ const Home = () => {
               )}
             </div>
           )}
+
+          {/* View Controls and Filters */}
+          {(movies.length > 0 || loading) && (
+            <div className="view-controls card" style={{ marginBottom: '2rem' }}>
+              <div className="view-toggle">
+                <button 
+                  className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                  onClick={() => setViewMode('grid')}
+                >
+                  <span>📊</span> Grid View
+                </button>
+                <button 
+                  className={`view-btn ${viewMode === 'timeline' ? 'active' : ''}`}
+                  onClick={() => setViewMode('timeline')}
+                >
+                  <span>📅</span> Timeline View
+                </button>
+              </div>
+              
+              {viewMode === 'grid' && (
+                <MovieFilters 
+                  onFiltersChange={handleFiltersChange}
+                  availableGenres={availableGenres}
+                  isVisible={movies.length > 0}
+                />
+              )}
+            </div>
+          )}
           
-          <MoviesGrid 
-            movies={movies} 
-            loading={loading} 
-            error={error}
-          />
+          {/* Results Display */}
+          {viewMode === 'grid' ? (
+            <MoviesGrid 
+              movies={filteredMovies} 
+              loading={loading} 
+              error={error}
+              onDiscoverSimilar={handleDiscoverSimilar}
+            />
+          ) : (
+            <MovieTimeline 
+              movies={filteredMovies} 
+              loading={loading}
+            />
+          )}
         </div>
       )}
       

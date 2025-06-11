@@ -3,6 +3,8 @@ import '../styles/Dashboard.css';
 import GenreChart from '../components/Charts/GenreChart';
 import RatingChart from '../components/Charts/RatingChart';
 import YearChart from '../components/Charts/YearChart';
+import DirectorsChart from '../components/Charts/DirectorsChart';
+import HeatmapChart from '../components/Charts/HeatmapChart';
 import { dashboardAPI } from '../services/api';
 
 const DashboardPage = () => {
@@ -124,6 +126,16 @@ const DashboardPage = () => {
         <div className="chart-card" style={{ gridColumn: 'span 2' }}>
           <h3 className="chart-title">Movie Releases Over Time</h3>
           <YearChart data={dashboardData?.yearDistribution} />
+        </div>
+
+        <div className="chart-card">
+          <h3 className="chart-title">Top Directors</h3>
+          <DirectorsChart data={dashboardData?.directorCounts} />
+        </div>
+
+        <div className="chart-card chart-card-wide">
+          <h3 className="chart-title">Genre Distribution Over Time</h3>
+          <HeatmapChart data={dashboardData?.genreYearHeatmap} />
         </div>
       </div>
 

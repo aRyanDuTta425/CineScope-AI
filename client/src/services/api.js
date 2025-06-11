@@ -38,6 +38,11 @@ export const movieAPI = {
     return response.data;
   },
 
+  findSimilar: async (movie) => {
+    const response = await api.post('/movies/similar', { movie });
+    return response.data;
+  },
+
   getInsights: async (movies) => {
     const response = await api.post('/movies/insights', { movies });
     return response.data;

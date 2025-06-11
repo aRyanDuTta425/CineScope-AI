@@ -577,6 +577,69 @@ p {
   color: var(--text-secondary) !important;
 }
 
+/* View Controls */
+.view-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+}
+
+.view-toggle {
+  display: flex;
+  gap: var(--spacing-xs);
+  background: var(--bg-secondary);
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-primary);
+  align-self: flex-start;
+}
+
+.view-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.view-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--accent-gradient);
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.view-btn:hover::before,
+.view-btn.active::before {
+  left: 0;
+}
+
+.view-btn:hover,
+.view-btn.active {
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.view-btn span {
+  font-size: 1rem;
+}
+
 /* Responsive Design for Example Queries */
 @media (max-width: 768px) {
   .example-queries {
